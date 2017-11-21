@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import java.io.Serializable;
 import java.util.List;
 
 import me.osborn.andrew.criminalintent.R;
@@ -105,7 +104,7 @@ public class CrimeListFragment extends Fragment
         public void onClick(View view)
         {
             selectedCrimePosition = getAdapterPosition();
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
     }
