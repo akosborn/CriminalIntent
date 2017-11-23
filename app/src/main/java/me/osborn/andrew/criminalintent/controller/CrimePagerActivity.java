@@ -28,6 +28,7 @@ public class CrimePagerActivity extends FragmentActivity
     {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
         intent.putExtra(EXTRA_CRIME_ID, crimeId);
+
         return intent;
     }
 
@@ -50,7 +51,7 @@ public class CrimePagerActivity extends FragmentActivity
             public Fragment getItem(int position)
             {
                 Crime crime = mCrimes.get(position);
-                return CrimeFragment.newInstanec(crime.getId());
+                return CrimeFragment.newInstance(crime.getId());
             }
 
             @Override
