@@ -3,6 +3,7 @@ package model;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,5 +49,19 @@ public class CrimeLab
     public void addCrime(Crime crime)
     {
         mCrimes.add(crime);
+    }
+
+    public void deleteCrime(UUID id)
+    {
+        Iterator<Crime> iterator = mCrimes.iterator();
+
+        while (iterator.hasNext())
+        {
+            Crime crime = iterator.next();
+            if (crime.getId().equals(id))
+            {
+                iterator.remove();
+            }
+        }
     }
 }
