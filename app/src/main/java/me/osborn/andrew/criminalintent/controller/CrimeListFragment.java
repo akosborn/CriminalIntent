@@ -31,6 +31,7 @@ public class CrimeListFragment extends Fragment
             "selected_crime_position";
     public static final String EXTRA_SUBTITLE_VISIBLE =
             "me.osborn.andrew.criminalintent.subtitle_visible";
+    private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
@@ -64,6 +65,9 @@ public class CrimeListFragment extends Fragment
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         updateUI();
+
+        if (savedInstanceState != null)
+            mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
 
         return view;
     }
@@ -197,6 +201,7 @@ public class CrimeListFragment extends Fragment
     {
         super.onSaveInstanceState(outState);
         outState.putSerializable(SELECTED_CRIME_POSITION, selectedCrimePosition);
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
     }
 
     @Override
