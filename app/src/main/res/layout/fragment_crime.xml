@@ -59,5 +59,6 @@
         android:layout_marginBottom="10dp"
         android:src="@drawable/ic_delete_black_24dp"
         android:background="?android:selectableItemBackground"
-        android:tint="@color/warningRed"/>
+        android:tint="@color/warningRed"
+        android:contentDescription="@string/crime_delete"/>
 </RelativeLayout>
