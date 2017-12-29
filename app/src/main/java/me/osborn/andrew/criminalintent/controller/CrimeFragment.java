@@ -1,6 +1,7 @@
 package me.osborn.andrew.criminalintent.controller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -60,6 +61,13 @@ public class CrimeFragment extends Fragment
     private Button mSuspectButton;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
+    private Callbacks mCallbacks;
+
+    // Required interface for hosting activities
+    public interface Callbacks
+    {
+        void onCrimeUpdated(Crime crime);
+    }
 
     public static CrimeFragment newInstance(UUID crimeId)
     {
@@ -70,6 +78,13 @@ public class CrimeFragment extends Fragment
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
     }
 
     @Override
@@ -101,6 +116,7 @@ public class CrimeFragment extends Fragment
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
                 mCrime.setTitle(charSequence.toString());
+                updateCrime();
             }
 
             @Override
@@ -149,6 +165,7 @@ public class CrimeFragment extends Fragment
             {
                 // Set the crime's solved property
                 mCrime.setSolved(isChecked);
+                updateCrime();
             }
         });
 
@@ -256,6 +273,12 @@ public class CrimeFragment extends Fragment
         return v;
     }
 
+    private void updateCrime()
+    {
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
+    }
+
     private void updateTime()
     {
         mTimeButton.setText(DateFormat.format("h:mm a", mCrime.getDate()));
@@ -276,6 +299,13 @@ public class CrimeFragment extends Fragment
     }
 
     @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (resultCode != Activity.RESULT_OK)
@@ -288,6 +318,7 @@ public class CrimeFragment extends Fragment
             Date date = (Date) data
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
+            updateCrime();
             updateDate();
         }
 
@@ -296,6 +327,7 @@ public class CrimeFragment extends Fragment
             Date date = (Date) data
                     .getSerializableExtra(TimePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
+            updateCrime();
             updateTime();
         }
         else if (requestCode == REQUEST_CONTACT && data != null)
@@ -330,6 +362,7 @@ public class CrimeFragment extends Fragment
         }
         else if (requestCode == REQUEST_PHOTO)
         {
+            updateCrime();
             updatePhotoView();
         }
     }

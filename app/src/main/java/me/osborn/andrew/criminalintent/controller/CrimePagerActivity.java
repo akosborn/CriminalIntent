@@ -17,6 +17,7 @@ import model.Crime;
 import model.CrimeLab;
 
 public class CrimePagerActivity extends AppCompatActivity
+    implements CrimeFragment.Callbacks
 {
     private static final String EXTRA_CRIME_ID =
             "me.osborn.andrew.criminalintent.crime_id";
@@ -78,5 +79,12 @@ public class CrimePagerActivity extends AppCompatActivity
                 break;
             }
         }
+    }
+
+    // Must be implemented in all activities that host CrimeFragment
+    @Override
+    public void onCrimeUpdated(Crime crime)
+    {
+
     }
 }

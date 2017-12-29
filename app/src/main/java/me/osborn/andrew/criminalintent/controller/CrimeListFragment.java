@@ -1,6 +1,7 @@
 package me.osborn.andrew.criminalintent.controller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,20 @@ public class CrimeListFragment extends Fragment
     private boolean mSubtitleVisible;
     private TextView mAddCrimeHintTextView;
     private ImageButton mAddCrimeImageButton;
+    private Callbacks mCallbacks;
+
+    // Required interface for hosting activities
+    public interface Callbacks
+    {
+        void onCrimeSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -86,7 +101,7 @@ public class CrimeListFragment extends Fragment
         return view;
     }
 
-    private void updateUI()
+    public void updateUI()
     {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
@@ -157,9 +172,12 @@ public class CrimeListFragment extends Fragment
         public void onClick(View view)
         {
             selectedCrimePosition = getAdapterPosition();
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
-            intent.putExtra(EXTRA_SUBTITLE_VISIBLE, mSubtitleVisible);
-            startActivity(intent);
+
+//            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+//            intent.putExtra(EXTRA_SUBTITLE_VISIBLE, mSubtitleVisible);
+//            startActivity(intent);
+
+            mCallbacks.onCrimeSelected(mCrime);
         }
     }
 
@@ -268,9 +286,8 @@ public class CrimeListFragment extends Fragment
     {
         Crime crime = new Crime();
         CrimeLab.get(getActivity()).addCrime(crime);
-        Intent intent = CrimePagerActivity
-                .newIntent(getActivity(), crime.getId());
-        startActivity(intent);
+        updateUI();
+        mCallbacks.onCrimeSelected(crime);
     }
 
     private void updateSubtitle()
@@ -285,5 +302,12 @@ public class CrimeListFragment extends Fragment
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.getSupportActionBar().setSubtitle(subtitle);
+    }
+
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        mCallbacks = null;
     }
 }
